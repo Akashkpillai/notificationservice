@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Every notification attempt is logged here
+model Notification {
+  id               String    @id @default(uuid())
+  userId           String                          // who to send to
+  type             String                          // email | sms | push
+  channel          String                          // order_update | promo | alert
+  status           String    @default("pending")   // pending | sent | failed | dead
+  payload          Json                            // flexible message data
+  retries          Int       @default(0)           // how many times retried
+  errorMessage     String?                         // last error — nullable, only on failure
+  sentAt           DateTime?                       // when delivered — nullable until sent
+  createdAt        DateTime  @default(now())
+
+  @@map("notifications")                           // actual table name in PostgreSQL
+}
+
+// What notification channels each user has enabled
+model UserPreference {
+  id        String  @id @default(uuid())
+  userId    String  @unique                        // one preference record per user
+  email     Boolean @default(true)
+  sms       Boolean @default(false)
+  push      Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt                    // auto-updates on every save
+
+  @@map("user_preferences")
+}
+
+// Reusable message templates
+model NotificationTemplate {
+  id        String   @id @default(uuid())
+  name      String   @unique                       // e.g. "order_shipped", "otp_sms"
+  type      String                                 // email | sms | push
+  subject   String?                                // only for email
+  body      String                                 // template with {{variables}}
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("notification_templates")
+}
