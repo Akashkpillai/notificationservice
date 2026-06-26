@@ -2,7 +2,7 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { CreateNotificationDto } from '@app/common';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { NotificationService } from './notification.service';
 
 @ApiTags('notifications')

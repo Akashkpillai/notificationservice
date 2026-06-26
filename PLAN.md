@@ -50,57 +50,57 @@ PHASE 7 → Testing & documentation        (Week 4, Days 5–7)
 
 ### 1.1 — Critical Bug Fixes
 
-- [ ] **Fix Docker Compose healthcheck user mismatch**
+- [x] **Fix Docker Compose healthcheck user mismatch**
   - The Postgres healthcheck uses `-U admin` but the DB user is `postgres`
   - This causes Kafka to never start cleanly because it waits for Postgres
   - File: `docker-compose.yml` → line 18
 
-- [ ] **Remove duplicate global filter and interceptor registration**
+- [x] **Remove duplicate global filter and interceptor registration**
   - `LoggingInterceptor` and `HttpExceptionFilter` are registered in BOTH `main.ts` AND `app.module.ts`
   - This causes every request to be logged and every error to be formatted twice
   - Decision: Keep the `APP_INTERCEPTOR` / `APP_FILTER` approach in `app.module.ts` (supports DI)
   - Remove the `useGlobalFilters()` and `useGlobalInterceptors()` calls in `main.ts`
 
-- [ ] **Fix Logging Interceptor — status code always shows 200**
+- [x] **Fix Logging Interceptor — status code always shows 200**
   - The status code is read BEFORE the handler runs, so errors always log as 200
   - Move the `response.statusCode` read INSIDE the `tap()` callback
   - File: `apps/api-gateway/src/interceptors/logging.interceptor.ts`
 
-- [ ] **Add missing `url` field to Prisma datasource**
+- [x] **Add missing `url` field to Prisma datasource**
   - The `datasource db` block in `schema.prisma` is missing `url = env("DATABASE_URL")`
   - Without this, standard `prisma migrate` commands fail
   - File: `prisma/schema.prisma`
 
 ### 1.2 — TypeScript & Config Hardening
 
-- [ ] **Enable `noImplicitAny` in TypeScript config**
+- [x] **Enable `noImplicitAny` in TypeScript config**
   - Currently `noImplicitAny: false` — this allows silent `any` types everywhere
   - Enable it and fix the resulting type errors
   - File: `tsconfig.json`
 
-- [ ] **Create a `JwtPayload` interface in the common library**
+- [x] **Create a `JwtPayload` interface in the common library**
   - The JWT `validate()` function currently accepts `payload: any` and returns it blindly
   - Define a proper interface: `{ sub: string, email: string, iat: number, exp: number }`
   - File: `libs/common/src/interfaces/` → new file `jwt-payload.interface.ts`
   - Update `libs/common/src/index.ts` to export it
 
-- [ ] **Update `jwt.strategy.ts` to use the `JwtPayload` interface**
+- [x] **Update `jwt.strategy.ts` to use the `JwtPayload` interface**
   - Replace `payload: any` with the new typed interface
   - Validate that `sub` exists in the payload before returning
   - File: `apps/api-gateway/src/guards/jwt.strategy.ts`
 
 ### 1.3 — Project Structure Cleanup
 
-- [ ] **Move auth files into `src/modules/auth/` folder**
+- [x] **Move auth files into `src/modules/auth/` folder**
   - Currently: `src/guards/auth.module.ts`, `src/guards/jwt.strategy.ts`, `src/guards/jwt-auth.guard.ts`
   - Should be: `src/modules/auth/auth.module.ts`, etc. (consistent with health + notifications pattern)
   - Update all imports after moving
 
-- [ ] **Remove the unused `notification-system` app (or define its role)**
+- [x] **Remove the unused `notification-system` app (or define its role)**
   - There is an `apps/notification-system/` app that is the default NestJS scaffold and serves no purpose
   - Decision needed: either delete it or rename/repurpose it as the monorepo entry point
 
-- [ ] **Remove `exports: [NotificationService]` from `NotificationModule`**
+- [x] **Remove `exports: [NotificationService]` from `NotificationModule`**
   - `NotificationService` is not consumed by any other module — dead export
   - File: `apps/api-gateway/src/modules/notifications/notification.module.ts`
 

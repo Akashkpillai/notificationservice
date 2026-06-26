@@ -1,10 +1,10 @@
 export const KAFKA_TOPICS = {
-  NOTIFICATION_REQUESTED: 'notifications.requested',
+  NOTIFICATION_REQUESTED: 'notification.requested',
 
-  EMAIL_NOTIFICATIONS: 'notifications.email',
-  SMS_NOTIFICATIONS: 'notifications.sms',
-  PUSH_NOTIFICATIONS: 'notifications.push',
+  EMAIL_NOTIFICATIONS: 'notification.email',
+  SMS_NOTIFICATIONS: 'notification.sms',
+  PUSH_NOTIFICATIONS: 'notification.push',
 
-  NOTIFICATIONS_RETRY: 'notifications.retry',
-  NOTIFICATIONS_DLQ: 'notifications.dlq',
+  NOTIFICATIONS_RETRY: 'notification.retry',
+  NOTIFICATIONS_DLQ: 'notification.dlq',
 } as const;

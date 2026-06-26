@@ -15,3 +15,8 @@ export * from './dto/notification-event.dto';
 
 //interface
 export * from './interfaces/notification-interface';
+export * from './interfaces/jwt-payload.interface';
+
+//prisma
+export * from './prisma/prisma.service';
+export * from './prisma/prisma.module';

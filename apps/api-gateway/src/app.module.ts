@@ -5,7 +5,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { NotificationModule } from './modules/notifications/notification.module';
 import { HealthModule } from './modules/health/health.module';
-import { AuthModule } from './guards/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
@@ -39,4 +39,3 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor';
   ],
 })
 export class AppModule {}
-

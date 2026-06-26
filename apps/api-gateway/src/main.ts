@@ -3,8 +3,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import helmet from 'helmet';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 
 async function bootstrap() {
@@ -24,9 +22,6 @@ async function bootstrap() {
     }),
   );
 
-  // ─── Global Interceptors & Filters ─────────────────
-  app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new LoggingInterceptor());
 
   // ─── Swagger ──────────────────────────────────────
   const config = new DocumentBuilder()
