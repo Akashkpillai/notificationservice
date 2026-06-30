@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
-import { SmsServicesService } from './sms-services.service';
+import { Controller, Logger } from '@nestjs/common';
+import { SmsServices } from './sms-services.service';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import { NotificationEventDto, KAFKA_TOPICS } from '@app/common';
 
 @Controller()
 export class SmsServicesController {
-  constructor(private readonly smsServicesService: SmsServicesService) {}
+  private readonly logger = new Logger(SmsServicesController.name)
+  constructor(private readonly smsServices: SmsServices) { }
 
-  @Get()
-  getHello(): string {
-    return this.smsServicesService.getHello();
+  @EventPattern(KAFKA_TOPICS.SMS_NOTIFICATIONS)
+  async handleSmsNotifications(@Payload() data: NotificationEventDto) {
+    this.logger.log(`Received sms notification: ${JSON.stringify(data)}`);
+    await this.smsServices.sendSms(data);
   }
 }

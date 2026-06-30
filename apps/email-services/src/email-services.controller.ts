@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
-import { EmailServicesService } from './email-services.service';
+import { Controller, Logger } from '@nestjs/common';
+import { EmailServices } from './email-services.service';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import { NotificationEventDto, KAFKA_TOPICS } from '@app/common';
 
 @Controller()
 export class EmailServicesController {
-  constructor(private readonly emailServicesService: EmailServicesService) {}
+  private readonly logger = new Logger(EmailServicesController.name)
+  constructor(private readonly emailServices: EmailServices) { }
 
-  @Get()
-  getHello(): string {
-    return this.emailServicesService.getHello();
+  @EventPattern(KAFKA_TOPICS.EMAIL_NOTIFICATIONS)
+  async handleEmailNotifications(@Payload() data: NotificationEventDto) {
+    this.logger.log(`Received email notification: ${JSON.stringify(data)}`);
+    await this.emailServices.sendEmail(data);
   }
 }
